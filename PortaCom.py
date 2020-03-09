@@ -1,23 +1,20 @@
-#Imports
+# Imports
 import matplotlib.pyplot as plt
 import random as rand
 import numpy as np
 
 
-#Variables definitions
-c1 = c2 = x = 0
-c1_list = []
-c2_list = []
-x_list = []
-profit_list = []
-mean, sd = 15000, 4500
-profit = profit_times = 0
-counter = 0
-
-
-#portaCom() function
+# portaCom() function
 def portaCom(n, c):
-    global c1, c2, x, c1_list, c2_list, x_list, profit_list, mean, sd, profit, profit_times, counter
+    c1 = c2 = x = 0
+    c1_list = []
+    c2_list = []
+    x_list = []
+    profit_list = []
+    mean, sd = 15000, 4500
+    profit = sum_profit = max_profit = max_loss = profit_times = 0
+    counter = 0
+    
     while counter < n:
         r1 = rand.random()
         r2 = rand.random()
@@ -39,7 +36,7 @@ def portaCom(n, c):
 
         profit = (249-c1-c2)*x - 1000000
 
-        #store values in lists
+        # store values in lists
         c1_list.append(c1)
         c2_list.append(c2)
         x_list.append(x)
@@ -47,14 +44,21 @@ def portaCom(n, c):
 
 
         if profit > 0:
+            sum_profit += profit
             profit_times += 1
+        
+        if max_profit < profit:
+            max_profit = profit
+        
+        if max_loss > profit:
+            max_loss = profit
 
         counter += 1
         
-    print 'Probability of loss = ', 1 - (profit_times / n * 1.0)
-    print 'Maximum profit = ', max(profit_list)
-    print 'Maximum loss = ', min(profit_list)
-    print 'Average profit = ', sum(profit_list)/len(profit_list)
+    print 'Probability of loss = ', 1 - (profit_times*1.0 / n)
+    print 'Maximum profit = ', max_profit
+    print 'Maximum loss = ', max_loss
+    print 'Average profit = ', sum_profit/profit_times
 
     plt.hist(c1_list, bins=[43, 44, 45, 46, 47, 48], rwidth=0.95, color=c)
     plt.xlabel('c1')
@@ -77,11 +81,11 @@ def portaCom(n, c):
     plt.show()
 
 
-#10 runs simulation
+# 10 runs simulation
 portaCom(10, "orange")
 
 
-#1000,000 runs simulation
+# 1000,000 runs simulation
 portaCom(1000000, "b")
 
 
